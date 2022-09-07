@@ -60,7 +60,7 @@ def run_test_server() -> None:
     app.add_routes(routes=routes)
 
     provide(app=app,
-            value=DummyPrimaryArduinoService(),
+            value=PrimaryArduinoService(),
             valueType=PrimaryService)
     provide(app=app,
             value=DummySecondaryArduinoService(),
@@ -69,12 +69,12 @@ def run_test_server() -> None:
     provide(app=app, value=ServerState(
         camera_port=6,
         standard_arduino_constants=ArduinoConstants(
-            acc100=30,
-            acc50=50,
-            cc100=100,
-            cc50=50,
+            acc100=3000,
+            acc50=3000,
+            cc100=0,
+            cc50=0,
             is_double=True,
-            max_speed=50,
+            max_speed=200,
         )
     ), valueType=ServerState)
     provide(app=app,
@@ -98,4 +98,4 @@ def run_test_server() -> None:
         task_func=handle_primary_updates
     )
 
-    web.run_app(app, host='192.168.0.42', port=9000)
+    web.run_app(app, host='127.0.0.1', port=9000)

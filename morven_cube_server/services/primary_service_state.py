@@ -6,10 +6,12 @@ from morven_cube_server.services.primary_service import PrimaryService
 from morven_cube_server.states.server_state import SensorData
 from morven_cube_server.services.api.arduino_connection import ArduinoConnection, connect_to_arduino
 from morven_cube_server.state_handler.notifier import Notifier
+import asyncio
 
+class PrimaryArduinoService(PrimaryService):
 
-class PrimaryArduinoService(Notifier):
     async def connect(self, port: str, baudrate: int):
+        self._connection = None
         self._connection = await connect_to_arduino(port, baudrate)
 
     # replace current program
@@ -37,6 +39,8 @@ class PrimaryArduinoService(Notifier):
 
     async def handle_received_updates(self) -> AsyncIterator[EndOfProgramReport | RunningProgramReport]:
         while True:
+            if self._connection == None:
+                await asyncio.sleep(1)
             raw_data = await self._connection.fetch_updates()
             #sensor_data: SensorData = convert_to_sensor_data(data)
             data = _response_string_to_dic(raw_data)

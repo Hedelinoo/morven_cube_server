@@ -12,6 +12,6 @@ async def connect_to_arduinos(app: web.Application) -> None:
     service1 = consume(app, valueType=PrimaryService)
     service2 = consume(app, valueType=SecondaryService)
     state1 = consume(app, valueType=PrimaryServiceState)
-    await service1.connect(baudrate=5000, port=5)
+    await service1.connect(baudrate=115200, port="/COM5")
     await service2.connect(baudrate=5000, port=5)
     state1.status = PrimaryArduinoStatus.IDLING
